@@ -15,6 +15,11 @@ import {
     Timestamp
 } from 'firebase/firestore';
 
+// --- App Configuration ---
+// Set this to true to require a password, or false to log in on click.
+const PASSWORD_PROTECTION_ENABLED = false;
+
+
 // --- SVG Icons ---
 // Using inline SVGs to avoid external dependencies.
 const PlusIcon = () => (
@@ -108,9 +113,13 @@ const LoginScreen = ({ setUser }) => {
     };
 
     const handleUserSelect = (user) => {
-        setSelectedUser(user);
-        setError('');
-        setPassword('');
+        if (PASSWORD_PROTECTION_ENABLED) {
+            setSelectedUser(user);
+            setError('');
+            setPassword('');
+        } else {
+            setUser(user); // Bypass password check if disabled
+        }
     };
 
     return (
@@ -134,7 +143,7 @@ const LoginScreen = ({ setUser }) => {
                     </button>
                 </div>
 
-                {selectedUser && (
+                {selectedUser && PASSWORD_PROTECTION_ENABLED && (
                     <div className="space-y-4">
                         <input
                             type="password"
